@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import router from '@/router'
+import handleClipboard from '@/utils/clipboard'
 import { onMounted, ref } from 'vue'
 
 const menuBox = ref<HTMLElement | null>(null)
@@ -28,26 +29,13 @@ const menuButton = ref<HTMLElement | null>(null)
 const menuItems = ref([
   {
     class: 'fa fa-sliders',
-    name: '返回',
-    callback: () => {
-      // 设置被点击时的回调函数
-      router.back()
-    },
+    name: '重试',
+    callback: () => router.push('/login'),
   },
   {
     class: 'fa fa-clone',
-    name: '复制',
-    callback: () => {},
-  },
-  {
-    class: 'fa fa-share-square-o',
-    name: '分享',
-    callback: () => {},
-  },
-  {
-    class: 'fa fa-trash-o',
-    name: '删除',
-    callback: () => {},
+    name: '项目',
+    callback: () => handleClipboard('https://github.com/fromsko/sLogin'),
   },
 ])
 
@@ -132,14 +120,14 @@ body::before {
 /* 菜单列表 */
 .menu-list {
   width: 100px;
-  height: 160px;
+  height: 80px;
   background-color: #fff;
   border-radius: 8px;
   list-style: none;
   padding: 6px;
   box-shadow: 0 0 4px 4px rgba(92, 103, 255, 0.15);
   position: absolute;
-  right: 15px;
+  right: 20px;
   bottom: 20px;
   /* 默认隐藏 */
   opacity: 0;

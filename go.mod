@@ -5,7 +5,6 @@ go 1.21
 toolchain go1.22.5
 
 require (
-	github.com/cakturk/go-netstat v0.0.0-20200220111822-e5b49efee7a5
 	github.com/getlantern/systray v1.2.2
 	github.com/tidwall/gjson v1.9.3
 	github.com/wailsapp/wails/v2 v2.9.1
