@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   VERSION: v1.0.0 # 这里可以动态生成版本号
 
@@ -58,21 +57,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate Changelog
-        run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt && echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV 
+        run: |
+          echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+          echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV 
 
-      # - name: Create GitHub Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   with:
-      #     tag_name: ${{ VERSION }}
-      #     release_name: Release ${{ VERSION }}
-      #     draft: false
-      #     prerelease: false
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}  # 使用 env 中的 VERSION
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
 
-      - name: publish version
+      - name: Publish version
         uses: softprops/action-gh-release@v2.0.8
         with:
-          tag_name: ${{ VERSION }}
+          tag_name: ${{ env.VERSION }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           files: |
