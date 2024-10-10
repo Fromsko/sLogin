@@ -1,0 +1,64 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main  # 触发主分支的构建与发布
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # 检出代码
+
+      - name: Set up Go environment
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'  # 根据项目需要设置 Go 版本
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # 根据项目需要设置 Node.js 版本
+
+      - name: Install dependencies
+        run: cd frontend && npm install
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build the Wails App with NSIS and UPX
+        run: wails build -nsis -upx
+
+      - name: Archive build output
+        uses: actions/upload-artifact@v3
+        with:
+          name: wails-windows-build
+          path: dist/  # dist 文件夹包含构建产物
+
+  release:
+    runs-on: windows-latest
+    needs: build  # 依赖构建任务
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wails-windows-build
+          path: dist/
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "::set-output name=version::$(node -p -e "require('./frontend/package.json').version")"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}  # 自动使用 package.json 中的版本号
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: dist/*.exe  # 上传构建的可执行文件
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的令牌，用于发布新版本
