@@ -57,12 +57,15 @@ jobs:
           name: wails-windows-build
           path: build/bin/
 
+      - name: List files
+        run: dir # 在Windows环境下列出文件
+
       # Step to read version from the 'version' file
       - name: Read version from file
         id: read_version
         uses: andstor/file-reader-action@v1
         with:
-          path: './version'
+          path: version  # 确保路径正确
 
       # Step to create a new GitHub Release using the version
       - name: Create GitHub Release
