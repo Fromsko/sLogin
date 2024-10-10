@@ -74,4 +74,5 @@ jobs:
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           files: |
-            build/bin/*.exe
+            build/bin/sLogin.exe
+            build/bin/sLogin-amd64-installer.exe
