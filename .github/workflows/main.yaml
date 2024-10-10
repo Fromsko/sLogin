@@ -56,10 +56,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        run: echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
 
       - name: Generate Changelog
-        run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+        run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt && echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV 
 
       # - name: Create GitHub Release
       #   id: create_release
