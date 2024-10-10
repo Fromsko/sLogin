@@ -1,4 +1,4 @@
-name: Build and Release Wails App
+name: Build
 
 on:
   push:
