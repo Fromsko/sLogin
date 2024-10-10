@@ -2,13 +2,13 @@ name: Build
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - dev
   workflow_dispatch:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: ${{ github.ref }}
+  VERSION: 0.0.3
 
 jobs:
   build:
