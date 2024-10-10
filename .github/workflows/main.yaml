@@ -65,7 +65,7 @@ jobs:
         id: read_version
         uses: andstor/file-reader-action@v1
         with:
-          path: version  # 确保路径正确
+          path: ../version # 确保路径正确
 
       # Step to create a new GitHub Release using the version
       - name: Create GitHub Release
