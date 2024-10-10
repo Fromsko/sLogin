@@ -50,7 +50,7 @@ jobs:
 
       - name: Get version from package.json
         id: get_version
-        run: echo "::set-output name=version::$(node -p -e "require('./frontend/package.json').version")"
+        run: echo "::set-output name=version::$(cat ./version)"
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
