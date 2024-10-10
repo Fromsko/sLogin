@@ -9,7 +9,6 @@ import {
   PersonOutline,
 } from '@vicons/ionicons5'
 import {
-  defineComponent,
   onBeforeUnmount,
   onMounted,
   onUnmounted,
@@ -108,8 +107,6 @@ onUnmounted(async () => {
     })
   }
 })
-
-defineComponent({ name: 'FormTab' })
 </script>
 
 <template>
