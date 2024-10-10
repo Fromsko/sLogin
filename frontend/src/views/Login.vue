@@ -10,6 +10,7 @@ import {
 } from '@vicons/ionicons5'
 import {
   defineComponent,
+  onBeforeUnmount,
   onMounted,
   onUnmounted,
   reactive,
@@ -17,53 +18,43 @@ import {
   toRaw,
 } from 'vue'
 import { useRouter } from 'vue-router'
-import { model } from 'wailsjs/go/models'
 
 const display = useDisplay()
 const router = useRouter()
 const client = useClient()
+
+// Reactive state
 const state = reactive({
-  // 登录按钮
-  isLogin: false,
-  // 是否存活
-  isAlive: false,
-  // 连接模式
-  model: ref<LoginModel>({
-    username: '',
-    password: '',
-    client: '',
-  }),
-  // 运营商模式
-  clientModels: [
-    { value: '移动', label: '移动' },
-    { value: '联通', label: '联通' },
-    { value: '电信', label: '电信' },
-  ].map((s) => {
-    s.value = s.value.toLowerCase()
-    return s
-  }),
-  // 只允许输入数字
-  onlyAllowNumber: (value: string) => {
-    return !value || /^\d+$/.test(value)
-  },
-  haveArray: (items: object) => {
-    return Object.keys(items).length === 0
-  },
-  delayDirect: (path: string, delay: number = 1000) => {
-    let timer = setTimeout(async () => {
-      await router.push(path)
-      clearTimeout(timer)
-    }, delay)
-  },
+  isLogin: false, // 登录状态
+  isAlive: false, // 是否存活
+  model: ref<LoginModel>({ username: '', password: '', client: '' }), // 登录模型
+  clientModels: ['移动', '联通', '电信'].map((s) => ({
+    value: s.toLowerCase(),
+    label: s,
+  })),
 })
 
-// 登录响应器
-const handleLogin = async () => {
-  let resp = await client.login(state.model)
+// Helper functions
+const onlyAllowNumber = (value: string) => /^\d*$/.test(value)
 
+const haveArray = (items: object) => Object.keys(items).length === 0
+
+const delayDirect = (path: string, delay = 1000) => {
+  setTimeout(() => router.push(path), delay)
+}
+
+const loadStoredConfig = () => {
+  const config = storage.getItem('loginConfig')
+  if (config && !haveArray(config)) {
+    state.model = config as LoginModel
+  }
+}
+
+const handleLogin = async () => {
+  const resp = await client.login(state.model)
   if (resp.code === 200) {
     state.isLogin = true
-    state.delayDirect('/home')
+    delayDirect('/home')
     window.$message.success(resp.msg)
     storage.setItem('loginResp', resp.data)
     storage.setItem('loginConfig', toRaw(state.model))
@@ -71,35 +62,41 @@ const handleLogin = async () => {
     state.isLogin = false
     window.$message.error(resp.msg)
     storage.clearItem('loginResp')
-    storage.clearItem('userConfig')
+    storage.clearItem('loginConfig')
   }
 }
 
-onMounted(async () => {
-  const ip = await display.clientIp()
-
-  if (ip.includes('127.0.0.1')) {
-    window.$message.error('请连接校园网')
+const attemptNoFeelLogin = async (config: LoginModel) => {
+  const resp = await client.login(config)
+  if (resp.code === 200) {
+    state.isLogin = true
+    state.isAlive = true
+    delayDirect('/home', 3000)
+    window.$message.success('无感知登录成功')
   } else {
-    let noFeelresp: model.SchoolLoginResp
-    let resp = storage.getItem('loginResp')
-    let conf = storage.getItem('loginConfig')
-
-    if (!state.haveArray(resp) && !state.haveArray(conf)) {
-      state.isAlive = true
-
-      noFeelresp = await client.login(conf as LoginModel)
-      if (noFeelresp.code === 200) {
-        state.isLogin = true
-        state.delayDirect('/home', 3000)
-        window.$message.success('无感知登录成功')
-        return
-      }
-      state.isLogin = false
-      state.isAlive = false
-      window.$message.warning('无感知登录失败, 请重试!')
-    }
+    state.isLogin = false
+    state.isAlive = false
+    window.$message.warning('无感知登录失败, 请重试!')
+    loadStoredConfig() // 载入存储的用户信息
   }
+}
+
+// Lifecycle hooks
+onMounted(async () => {
+  const storedResp = storage.getItem('loginResp')
+  const config = storage.getItem('loginConfig')
+
+  if (!haveArray(storedResp)) {
+    await attemptNoFeelLogin(config as LoginModel)
+  }
+})
+
+onBeforeUnmount(async () => {
+  const ip = await display.clientIp()
+  if (ip === '127.0.0.1') {
+    window.$message.error('请检查是否连接校园网!')
+  }
+  loadStoredConfig()
 })
 
 onUnmounted(async () => {
@@ -112,9 +109,7 @@ onUnmounted(async () => {
   }
 })
 
-defineComponent({
-  name: 'FormTab',
-})
+defineComponent({ name: 'FormTab' })
 </script>
 
 <template>
@@ -133,7 +128,7 @@ defineComponent({
           <n-form-item-row label="用户名">
             <n-input
               type="text"
-              :allow-input="state.onlyAllowNumber"
+              :allow-input="onlyAllowNumber"
               placeholder="只能输入数字"
               v-model:value="state.model.username"
               @keydown.enter.prevent
