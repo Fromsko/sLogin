@@ -59,23 +59,24 @@ jobs:
       - name: Generate Changelog
         run: |
           echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
-          echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV 
+          echo "VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.VERSION }}  # 使用 env 中的 VERSION
+          tag_name: ${{ env.VERSION }} # 使用环境变量
           release_name: Release ${{ env.VERSION }}
           draft: false
           prerelease: false
+        continue-on-error: true # 即使出错也继续执行
 
       - name: Publish version
+        if: steps.create_release.outcome == 'success'
         uses: softprops/action-gh-release@v2.0.8
         with:
-          tag_name: ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }} # 添加 tag_name 参数
           body_path: ${{ github.workspace }}-CHANGELOG.txt
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
           files: |
             build/bin/sLogin.exe
             build/bin/sLogin-amd64-installer.exe
