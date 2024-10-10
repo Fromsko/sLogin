@@ -71,6 +71,7 @@ jobs:
       - name: publish version
         uses: softprops/action-gh-release@v2.0.8
         with:
+          tag_name: ${{ env.VERSION }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           files: |
