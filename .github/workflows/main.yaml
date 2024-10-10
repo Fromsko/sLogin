@@ -1,64 +1,77 @@
-name: Build Wails App
+name: Build and Release Wails App
 
 on:
   push:
     branches:
-      - dev # 触发开发分支的构建与发布
-  workflow_dispatch: # 允许手动触发
+      - dev # Trigger on push to the dev branch
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
+      # Step to checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3 # 检出代码
+        uses: actions/checkout@v3
 
+      # Step to set up the Go environment
       - name: Set up Go environment
         uses: actions/setup-go@v4
         with:
-          go-version: '1.22.5' # 使用 Go 1.21 及以上
+          go-version: '1.22.5'
 
+      # Step to set up the Node.js environment
       - name: Set up Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # 根据项目需要设置 Node.js 版本
+          node-version: '18'
 
-      - name: Install dependencies
+      # Step to install dependencies for the frontend
+      - name: Install frontend dependencies
         run: cd frontend && yarn install
 
+      # Step to install Wails CLI
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
+      # Step to build the Wails app
       - name: Build the Wails App with NSIS and UPX
-        run: wails build
+        run: wails build -nsis -upx
 
+      # Step to archive build output
       - name: Archive build output
         uses: actions/upload-artifact@v3
         with:
           name: wails-windows-build
-          path: build/bin/ # dist 文件夹包含构建产物
+          path: build/bin/
 
   release:
     runs-on: windows-latest
-    needs: build # 依赖构建任务
+    needs: build # Wait for the build job to complete
+
     steps:
+      # Step to download the build artifact from the build job
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
           name: wails-windows-build
           path: build/bin/
 
-      - name: Get version from package.json
-        id: get_version
-        run: echo "::set-output name=version::$(cat ./version)"
+      # Step to read version from the 'version' file
+      - name: Read version from file
+        id: read_version
+        uses: andstor/file-reader-action@v1
+        with:
+          path: './version'
 
+      # Step to create a new GitHub Release using the version
       - name: Create GitHub Release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }} # 自动使用 package.json 中的版本号
-          release_name: Release ${{ steps.get_version.outputs.version }}
+          tag_name: v${{ steps.read_version.outputs.contents }} # Use the version from the 'version' file
+          release_name: Release ${{ steps.read_version.outputs.contents }}
           draft: false
           prerelease: false
-          files: build/bin/*.exe # 上传构建的可执行文件
+          files: build/bin/*.exe # Upload the built executable
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动提供的令牌，用于发布新版本
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token for authentication
