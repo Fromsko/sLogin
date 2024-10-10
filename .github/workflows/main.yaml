@@ -76,7 +76,7 @@ jobs:
         if: steps.create_release.outcome == 'success'
         uses: softprops/action-gh-release@v2.0.8
         with:
-          tag_name: ${{ env.VERSION }
+          tag_name: ${{ env.VERSION }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           files: |
             build/bin/sLogin.exe
