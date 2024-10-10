@@ -8,6 +8,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: v1.0.0 # 这里可以动态生成版本号
 
 jobs:
   build:
@@ -58,11 +59,19 @@ jobs:
       - name: Generate Changelog
         run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
 
-      - name: create github release
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: publish version
         uses: softprops/action-gh-release@v2.0.8
         with:
-          tag_name: latest
-          name: ${{github.ref_name}}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           files: |
             build/bin/*.exe
