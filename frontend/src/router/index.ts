@@ -1,18 +1,8 @@
-/** 
-  File: index.ts
-  Author: Fromsko
-  Created At: 2024-09-22
-  GitHub: https://github.com/fromsko
-  Description: 路由
-*/
 import { respData } from "@/models/client";
 import useColorLogOutPut from "@/utils/color_log";
-import storage from "@/utils/storage";
-import Home from "@/views/Home.vue";
+import { useStorage } from "@/utils/storage";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-
-// NOTE: 路由设置
 const routes = [
     {
 
@@ -36,7 +26,7 @@ const routes = [
         meta: {
             title: "首页"
         },
-        component: Home,
+        component: () => import("@/views/Home.vue"),
     },
     {
         name: 'loadingPage',
@@ -51,7 +41,12 @@ const routes = [
     {
         name: 'menuBarPage',
         path: '/menu_bar',
-        component: () => import(`@/components/MenuBar.vue`)
+        component: () => import(`@/views/Home.vue`)
+    },
+    {
+        name: 'setting',
+        path: '/setting',
+        component: () => import(`@/components/Setting.vue`)
     },
     {
         name: '404',
@@ -60,6 +55,7 @@ const routes = [
     }
 ]
 
+const storage = useStorage()
 const log = useColorLogOutPut()
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -74,7 +70,7 @@ router.beforeEach((to, from, next) => {
     document.title = title as string || '自定义名称';
     let checkUserInfo: boolean = false
     const urlPath: string = to.path.toLowerCase();
-    const loginResp = storage.getItem('loginResp') as respData;
+    const loginResp = storage.getItem("loginResp") as respData;
 
     if (loginResp?.ip && loginResp?.uid) {
         checkUserInfo = true
@@ -98,16 +94,5 @@ router.beforeEach((to, from, next) => {
             break;
     }
 });
-
-// 全局后置守卫
-router.afterEach((to, from, failure) => {
-    // console.log('全局后置守卫', to, from, failure)
-    // next()
-})
-
-// 全局解析守
-router.beforeResolve((to, from, next) => {
-    next()
-})
 
 export default router

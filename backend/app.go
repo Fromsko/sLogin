@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 	"sLogin/backend/config"
+	"sLogin/backend/core"
 	"sLogin/backend/model"
 	"sLogin/backend/utils"
 
@@ -74,4 +75,23 @@ func (a *App) Notify(msg model.NotifyData) {
 
 func (a *App) GetClientIP() string {
 	return utils.GetClientIP()
+}
+
+func (a *App) DownloadRepo(url string, proxy string) {
+	core.DownloadRepo(url, proxy)
+}
+
+func (a *App) DownloadRepos(repos []string, proxy string) {
+	core.DownloadRepos(repos, proxy)
+}
+
+func (a *App) DisplayInfo() *model.DisplayInfo {
+	return &model.DisplayInfo{
+		Host:    config.HOST,
+		Title:   config.TITLE,
+		GitHub:  config.GITHUB,
+		Author:  config.AUTHOR,
+		Version: config.VERSION,
+		Proxy:   config.PROXY,
+	}
 }

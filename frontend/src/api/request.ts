@@ -1,20 +1,11 @@
-import { display, LoginModel } from '@/models/client';
-import { GetAuthor, GetGithub, GetHost, GetTitle, GetVersion } from '../../wailsjs/go/api/DisplayConfig';
+import { LoginModel } from '@/models/client';
 import { Login, Logout } from '../../wailsjs/go/api/SchoolClient';
-import { GetClientIP, Notify } from '../../wailsjs/go/backend/App';
-
+import { DisplayInfo, DownloadRepo, DownloadRepos, GetClientIP, Notify } from '../../wailsjs/go/backend/App';
 
 const useDisplay = () => {
     return {
         async config() {
-            let conf: display = {
-                Host: await GetHost(),
-                GitHub: await GetGithub(),
-                Version: await GetVersion(),
-                Title: await GetTitle(),
-                Author: await GetAuthor(),
-            }
-            return conf
+            return await DisplayInfo()
         },
         async notify(params: any) {
             await Notify({
@@ -39,7 +30,20 @@ const useClient = () => {
     }
 }
 
+const useDownHub = () => {
+    return {
+        async repo(url: string, proxy: string = "") {
+            return await DownloadRepo(url, proxy)
+        },
+        async repos(urls: Array<string>, proxy: string = "") {
+            return await DownloadRepos(urls, proxy)
+        }
+    }
+}
+
 export {
     useClient,
-    useDisplay
+    useDisplay,
+    useDownHub
 };
+

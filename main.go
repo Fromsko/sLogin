@@ -18,7 +18,6 @@ func main() {
 	// Create an instance of the app structure
 	app := backend.NewApp()
 	client := api.NewSchoolClient()
-	config := api.NewDisplayConfig()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -34,10 +33,10 @@ func main() {
 		Bind: []interface{}{
 			app,
 			client,
-			config,
 		},
 		Frameless:     true, // 无边框模式(True)
 		DisableResize: true,
+		AlwaysOnTop:   true,
 		Windows: &windows.Options{
 			WebviewIsTransparent: false,
 			WindowIsTranslucent:  false,

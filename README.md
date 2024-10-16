@@ -180,6 +180,14 @@ frontend/src
     <img src="res/recording.gif" alt="" width="80%">
     </div>
 
+## 设计思路
+
+> 项目采用 插件化开发 | 配置化开发 进行设计
+
+```shell
+
+```
+
 ## 👨‍🔬 鸣谢
 
 + [wails](https://wails.io/)

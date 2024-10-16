@@ -19,10 +19,12 @@
 </template>
 
 <script lang="ts" setup>
-import router from '@/router'
 import handleClipboard from '@/utils/clipboard'
 import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
+const router = useRouter()
 const menuBox = ref<HTMLElement | null>(null)
 const menuButton = ref<HTMLElement | null>(null)
 
@@ -31,6 +33,18 @@ const menuItems = ref([
     class: 'fa fa-sliders',
     name: '重试',
     callback: () => router.push('/login'),
+  },
+  {
+    class: 'fa fa-down',
+    name: '返回',
+    callback: () => {
+      if (route.path !== '/home') router.back()
+    },
+  },
+  {
+    class: 'fa fa-down',
+    name: '设置',
+    callback: () => router.push('/setting'),
   },
   {
     class: 'fa fa-clone',
@@ -58,6 +72,7 @@ body::before {
   font-size: 32px;
   text-shadow: 0 3px 3px #4c6ed3;
 }
+
 .menu-box {
   /* 固定定位 右下角 */
   position: fixed;
@@ -65,6 +80,7 @@ body::before {
   right: 40px;
   z-index: 3000;
 }
+
 /* 菜单按钮 */
 .menu-button {
   width: 50px;
@@ -120,7 +136,7 @@ body::before {
 /* 菜单列表 */
 .menu-list {
   width: 100px;
-  height: 80px;
+  height: 160px;
   background-color: #fff;
   border-radius: 8px;
   list-style: none;

@@ -1,5 +1,27 @@
 export namespace model {
 	
+	export class DisplayInfo {
+	    host: string;
+	    title: string;
+	    author: string;
+	    github: string;
+	    version: string;
+	    proxy: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DisplayInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.host = source["host"];
+	        this.title = source["title"];
+	        this.author = source["author"];
+	        this.github = source["github"];
+	        this.version = source["version"];
+	        this.proxy = source["proxy"];
+	    }
+	}
 	export class NotifyData {
 	    data: string;
 	    title: string;
@@ -14,11 +36,24 @@ export namespace model {
 	        this.title = source["title"];
 	    }
 	}
+	export class UserData {
+	    ip: string;
+	    uid: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new UserData(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ip = source["ip"];
+	        this.uid = source["uid"];
+	    }
+	}
 	export class SchoolLoginResp {
 	    code: number;
 	    msg: string;
-	    // Go type: struct { IP string "json:\"ip\""; UID string "json:\"uid\"" }
-	    data: any;
+	    data: UserData;
 	
 	    static createFrom(source: any = {}) {
 	        return new SchoolLoginResp(source);
@@ -28,7 +63,7 @@ export namespace model {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.code = source["code"];
 	        this.msg = source["msg"];
-	        this.data = this.convertValues(source["data"], Object);
+	        this.data = this.convertValues(source["data"], UserData);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -49,6 +84,7 @@ export namespace model {
 		    return a;
 		}
 	}
+	
 	export class UserInfo {
 	    client: string;
 	    username: string;
