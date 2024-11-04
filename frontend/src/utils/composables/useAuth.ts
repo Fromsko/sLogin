@@ -28,7 +28,7 @@ export const useAuth = () => {
         resp,
         config,
         model: store.model,
-        disply: store.display,
+        display: store.display,
         isLogin: store.isLogin,
         isAlive: store.isAlive,
         clientModels: store.clientModels,

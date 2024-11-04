@@ -35,8 +35,6 @@ export const useAuthStore = defineStore('auth', () => {
         } else {
             isLogin.value = false
             window.$message.error(resp.msg)
-            storage.clearItem('loginResp')
-            storage.clearItem('loginConfig')
         }
     }
 
