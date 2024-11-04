@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import '@/assets/fonts/font.css'
-import { defineComponent } from 'vue'
 import Content from './components/Content.vue'
 import Header from './components/Header.vue'
 </script>
