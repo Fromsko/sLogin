@@ -1,141 +1,42 @@
 <script setup lang="ts">
-import { useClient, useDisplay } from '@/api/request'
 import LoadingFloat from '@/components/LoadingFloat.vue'
-import { LoginModel } from '@/models/client'
-import storage from '@/utils/storage'
-import {
-  GlassesOutline,
-  LockClosedOutline,
-  PersonOutline,
-} from '@vicons/ionicons5'
-import {
-  defineComponent,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  toRaw,
-} from 'vue'
-import { useRouter } from 'vue-router'
-import { model } from 'wailsjs/go/models'
+import { useAuth } from '@/utils/composables/useAuth'
+import { GlassesOutline, LockClosedOutline, PersonOutline } from '@vicons/ionicons5'
+import { onBeforeMount, onUnmounted } from 'vue'
+import { WindowSetSize } from '../../wailsjs/runtime'
 
-const display = useDisplay()
-const router = useRouter()
-const client = useClient()
-const state = reactive({
-  // 登录按钮
-  isLogin: false,
-  // 是否存活
-  isAlive: false,
-  // 连接模式
-  model: ref<LoginModel>({
-    username: '',
-    password: '',
-    client: '',
-  }),
-  // 运营商模式
-  clientModels: [
-    { value: '移动', label: '移动' },
-    { value: '联通', label: '联通' },
-    { value: '电信', label: '电信' },
-  ].map((s) => {
-    s.value = s.value.toLowerCase()
-    return s
-  }),
-  // 只允许输入数字
-  onlyAllowNumber: (value: string) => {
-    return !value || /^\d+$/.test(value)
-  },
-  haveArray: (items: object) => {
-    return Object.keys(items).length === 0
-  },
-  delayDirect: (path: string, delay: number = 1000) => {
-    let timer = setTimeout(async () => {
-      await router.push(path)
-      clearTimeout(timer)
-    }, delay)
-  },
-})
+const { store, loadStoredConfig, attemptNoFeelLogin } = useAuth()
 
-// 登录响应器
-const handleLogin = async () => {
-  let resp = await client.login(state.model)
-
-  if (resp.code === 200) {
-    state.isLogin = true
-    state.delayDirect('/home')
-    window.$message.success(resp.msg)
-    storage.setItem('loginResp', resp.data)
-    storage.setItem('loginConfig', toRaw(state.model))
-  } else {
-    state.isLogin = false
-    window.$message.error(resp.msg)
-    storage.clearItem('loginResp')
-    storage.clearItem('userConfig')
-  }
-}
-
-onMounted(async () => {
-  const ip = await display.clientIp()
-
-  if (ip.includes('127.0.0.1')) {
-    window.$message.error('请连接校园网')
-  } else {
-    let noFeelresp: model.SchoolLoginResp
-    let resp = storage.getItem('loginResp')
-    let conf = storage.getItem('loginConfig')
-
-    if (!state.haveArray(resp) && !state.haveArray(conf)) {
-      state.isAlive = true
-
-      noFeelresp = await client.login(conf as LoginModel)
-      if (noFeelresp.code === 200) {
-        state.isLogin = true
-        state.delayDirect('/home', 3000)
-        window.$message.success('无感知登录成功')
-        return
-      }
-      state.isLogin = false
-      state.isAlive = false
-      window.$message.warning('无感知登录失败, 请重试!')
-    }
-  }
+onBeforeMount(async () => {
+  await WindowSetSize(400, 500)
+  await loadStoredConfig()
+  await attemptNoFeelLogin()
 })
 
 onUnmounted(async () => {
-  if (state.isLogin) {
-    const ip = await display.clientIp()
-    await display.notify({
+  if (store.isLogin) {
+    const ip = await store.display.clientIp()
+    await store.display.notify({
       title: '校园网连接成功',
       data: `IP地址: ${ip}`,
     })
   }
 })
-
-defineComponent({
-  name: 'FormTab',
-})
 </script>
 
 <template>
-  <LoadingFloat v-if="state.isAlive" />
+  <LoadingFloat v-if="store.isAlive" />
 
-  <n-card v-else="state.isAlive" class="Form-Container">
-    <n-tabs
-      default-value="signin"
-      size="large"
-      justify-content="space-evenly"
-      type="segment"
-      animated
-    >
-      <n-tab-pane display-directive="show:lazy" name="signin" tab="登录">
-        <n-form :model="state.model">
+  <n-card v-else="store.isAlive" class="Form-Container">
+    <n-tabs default-value="signin" size="large" justify-content="space-evenly" type="segment" animated>
+      <n-tab-pane name="signin" tab="登录">
+        <n-form :model="store.model">
           <n-form-item-row label="用户名">
             <n-input
               type="text"
-              :allow-input="state.onlyAllowNumber"
+              :allow-input="store.onlyAllowNumber"
               placeholder="只能输入数字"
-              v-model:value="state.model.username"
+              v-model:value="store.model.username"
               @keydown.enter.prevent
               clearable
               round
@@ -149,7 +50,7 @@ defineComponent({
             <n-input
               type="password"
               placeholder="默认为身份证后6位"
-              v-model:value="state.model.password"
+              v-model:value="store.model.password"
               show-password-on="click"
               @keydown.enter.prevent
               round
@@ -162,37 +63,13 @@ defineComponent({
               </template>
             </n-input>
           </n-form-item-row>
-          <n-form-item-row
-            label="运营商"
-            class="radio-group-container"
-            size="large"
-          >
-            <n-radio-group
-              v-model:value="state.model.client"
-              name="radiobuttongroup1"
-              class="flex-group"
-            >
-              <n-radio-button
-                v-for="cm in state.clientModels"
-                :key="cm.value"
-                :value="cm.value"
-                :label="cm.label"
-                class="radio-button"
-              />
+          <n-form-item-row label="运营商" class="radio-group-container" size="large">
+            <n-radio-group v-model:value="store.model.client" name="radiobuttongroup1" class="flex-group">
+              <n-radio-button v-for="cm in store.clientModels" :key="cm.value" :value="cm.value" :label="cm.label" class="radio-button" />
             </n-radio-group>
           </n-form-item-row>
         </n-form>
-        <n-button
-          type="primary"
-          round
-          block
-          secondary
-          strong
-          @click="handleLogin"
-          :disabled="state.isLogin"
-        >
-          登录
-        </n-button>
+        <n-button type="primary" round block secondary strong @click="store.handleLogin" :disabled="store.isLogin"> 登录 </n-button>
       </n-tab-pane>
       <n-tab-pane name="signup" tab="注册" :disabled="true">
         <n-form>

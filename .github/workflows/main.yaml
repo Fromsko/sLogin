@@ -1,0 +1,81 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: 1.0.1
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go environment
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22.5'
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        run: cd frontend && yarn install
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build the Wails App with NSIS and UPX
+        run: wails build -nsis -upx
+
+      - name: Archive build output
+        uses: actions/upload-artifact@v3
+        with:
+          name: wails-windows-build
+          path: build/bin/
+
+  release:
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wails-windows-build
+          path: build/bin/
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Changelog
+        run: |
+          echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+        continue-on-error: true
+
+      - name: Publish version
+        if: steps.create_release.outcome == 'success'
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          tag_name: ${{ env.VERSION }}
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
+          files: |
+            build/bin/sLogin.exe
+            build/bin/sLogin-amd64-installer.exe

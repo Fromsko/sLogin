@@ -2,6 +2,8 @@
 
 > 是一款采用 `wails + vue3 + ts` 构建的登录器, 适用于张家界学院校园网系统
 
+[![Build and Release Wails App](https://github.com/Fromsko/sLogin/actions/workflows/main.yaml/badge.svg?branch=dev)](https://github.com/Fromsko/sLogin/actions/workflows/main.yaml)
+
 ## 📑 功能模块
 
 + 登录 `@/views/Login.vue`
@@ -177,6 +179,14 @@ frontend/src
     <div align="center">
     <img src="res/recording.gif" alt="" width="80%">
     </div>
+
+## 设计思路
+
+> 项目采用 插件化开发 | 配置化开发 进行设计
+
+```shell
+
+```
 
 ## 👨‍🔬 鸣谢
 

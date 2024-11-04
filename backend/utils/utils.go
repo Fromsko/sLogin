@@ -2,21 +2,23 @@ package utils
 
 import (
 	"net"
+	"os"
+	"path/filepath"
 	"sLogin/backend/model"
 	"strings"
 	"syscall"
 
+	"github.com/Fromsko/gouitls/logs"
 	"github.com/tidwall/gjson"
 )
+
+var Log = logs.InitLogger()
 
 func ParserResp(response []byte) *model.SchoolLoginResp {
 	var result = &model.SchoolLoginResp{
 		Code: 400,
 		Msg:  "登录失败",
-		Data: struct {
-			IP  string "json:\"ip\""
-			UID string "json:\"uid\""
-		}{},
+		Data: model.UserData{},
 	}
 
 	// 提取JSON字符串
@@ -77,4 +79,33 @@ func GetClientIP() (ipAddress string) {
 	}
 
 	return ipAddress
+}
+
+func ReadFromFile(file string) (urlList []string) {
+
+	basePath, err := filepath.Abs(file)
+	if err != nil {
+		Log.Error("Convert path: ", err)
+	}
+
+	exists := func(filename string) bool {
+		info, err := os.Stat(filename)
+		if os.IsNotExist(err) {
+			return false
+		}
+		return !info.IsDir()
+	}
+
+	if !exists(basePath) {
+		Log.Errorf(
+			"%s not found!", filepath.Base(basePath),
+		)
+	} else {
+		f, err := os.ReadFile(basePath)
+		if err != nil {
+			Log.Error("ReadFile Error: ", err)
+		}
+		urlList = strings.Split(strings.TrimSpace(string(f)), "\n")
+	}
+	return
 }

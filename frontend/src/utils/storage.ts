@@ -6,7 +6,7 @@
   Description: storage 封装
 */
 
-export default {
+export const useStorage = () => ({
     setItem(key: any, val: any) {
         let storage = this.getStorage()
         storage[key] = val
@@ -36,4 +36,4 @@ export default {
     clearAll() {
         window.localStorage.clear()
     }
-}
+})
