@@ -9,5 +9,3 @@ export function DownloadRepo(arg1:string,arg2:string):Promise<void>;
 export function DownloadRepos(arg1:Array<string>,arg2:string):Promise<void>;
 
 export function GetClientIP():Promise<string>;
-
-export function Notify(arg1:model.NotifyData):Promise<void>;

@@ -22,20 +22,6 @@ export namespace model {
 	        this.proxy = source["proxy"];
 	    }
 	}
-	export class NotifyData {
-	    data: string;
-	    title: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new NotifyData(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.data = source["data"];
-	        this.title = source["title"];
-	    }
-	}
 	export class UserData {
 	    ip: string;
 	    uid: string;

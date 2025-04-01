@@ -1,18 +1,13 @@
 import { LoginModel } from '@/models/client';
 import { Login, Logout } from '../../wailsjs/go/api/SchoolClient';
-import { DisplayInfo, DownloadRepo, DownloadRepos, GetClientIP, Notify } from '../../wailsjs/go/backend/App';
+import { DisplayInfo, DownloadRepo, DownloadRepos, GetClientIP } from '../../wailsjs/go/backend/App';
 
 const useDisplay = () => {
     return {
         async config() {
             return await DisplayInfo()
         },
-        async notify(params: any) {
-            await Notify({
-                title: params['title'],
-                data: params['data'],
-            })
-        },
+        async notify(params: any) { },
         async clientIp(): Promise<string> {
             return await GetClientIP()
         }
@@ -46,4 +41,3 @@ export {
     useDisplay,
     useDownHub
 };
-

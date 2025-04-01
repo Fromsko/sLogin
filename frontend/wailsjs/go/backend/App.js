@@ -17,7 +17,3 @@ export function DownloadRepos(arg1, arg2) {
 export function GetClientIP() {
   return window['go']['backend']['App']['GetClientIP']();
 }
-
-export function Notify(arg1) {
-  return window['go']['backend']['App']['Notify'](arg1);
-}
