@@ -44,11 +44,6 @@ const routes = [
         component: () => import(`@/views/Home.vue`)
     },
     {
-        name: 'setting',
-        path: '/setting',
-        component: () => import(`@/components/Setting.vue`)
-    },
-    {
         name: '404',
         path: '/:catchAll(.*)',
         component: () => import(`@/views/error/404.vue`)

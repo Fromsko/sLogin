@@ -4,12 +4,12 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-	"sLogin/backend/model"
 	"strings"
-	"syscall"
 
 	"github.com/Fromsko/gouitls/logs"
 	"github.com/tidwall/gjson"
+
+	"sLogin/backend/model"
 )
 
 var Log = logs.InitLogger()
@@ -40,18 +40,6 @@ func ParserResp(response []byte) *model.SchoolLoginResp {
 		result.Data.IP = data.Get("ss5").String()
 	}
 	return result
-}
-
-func IsWin11System() bool {
-	var (
-		modkernel32    = syscall.NewLazyDLL("kernel32.dll")
-		procGetVersion = modkernel32.NewProc("GetVersion")
-	)
-
-	ret, _, _ := procGetVersion.Call()
-	version := uint32(ret)
-	print(version)
-	return version >= 22000
 }
 
 func GetClientIP() (ipAddress string) {
