@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go environment
         uses: actions/setup-go@v4
@@ -34,7 +34,7 @@ jobs:
         run: wails build
 
       - name: Archive build output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wails-windows-build
           path: build/bin/
