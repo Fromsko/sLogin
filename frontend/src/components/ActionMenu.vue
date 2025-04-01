@@ -35,18 +35,6 @@ const menuItems = ref([
     callback: () => router.push('/login'),
   },
   {
-    class: 'fa fa-down',
-    name: '返回',
-    callback: () => {
-      if (route.path !== '/home') router.back()
-    },
-  },
-  {
-    class: 'fa fa-down',
-    name: '设置',
-    callback: () => router.push('/setting'),
-  },
-  {
     class: 'fa fa-clone',
     name: '项目',
     callback: () => handleClipboard('https://github.com/fromsko/sLogin'),
@@ -136,7 +124,7 @@ body::before {
 /* 菜单列表 */
 .menu-list {
   width: 100px;
-  height: 160px;
+  height: 80px;
   background-color: #fff;
   border-radius: 8px;
   list-style: none;

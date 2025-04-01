@@ -1,11 +1,3 @@
-<!--
-  File: SettingModal.vue
-  Author: Fromsko
-  Created At: 2024-09-23
-  GitHub: https://github.com/fromsko
-  Description: 设置模态框
--->
-
 <template>
   <n-modal
     v-model:show="showModalRef"
