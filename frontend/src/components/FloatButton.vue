@@ -48,12 +48,12 @@
 </template>
 
 <script lang="ts">
-import { CashOutline as CashIcon } from '@vicons/ionicons5'
-import { defineComponent } from 'vue'
+import { CashOutline as CashIcon } from "@vicons/ionicons5";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {
-    CashIcon
-  }
-})
+    CashIcon,
+  },
+});
 </script>

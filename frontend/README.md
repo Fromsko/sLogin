@@ -21,3 +21,38 @@ manual `h(...)` calls), you can enable Volar's Take Over mode by following these
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+### ENV
+
+```shell
+bun add -D @typescript-eslint/parser @typescript-eslint/eslint-plugin
+```
+
+- `eslint.config.js`
+
+```js
+import tseslint from "@typescript-eslint/eslint-plugin"
+import tsParser from "@typescript-eslint/parser"
+
+export default [
+  {
+    files: ["src/**/*.{ts,tsx,d.ts}"],
+    ignores: ["dist", "node_modules"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        project: "./tsconfig.json"
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint
+    },
+    rules: {
+      // 可根据需要添加 typescript 相关规则
+    },
+  },
+  // 你可以为 js 文件单独加一个配置块
+]
+```

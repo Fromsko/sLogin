@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import LoadingFloat from '@/components/LoadingFloat.vue'
-import { useAuth } from '@/utils/composables/useAuth'
-import { GlassesOutline, LockClosedOutline, PersonOutline } from '@vicons/ionicons5'
-import { onBeforeMount, onUnmounted } from 'vue'
-import { WindowSetSize } from '../../wailsjs/runtime'
+import LoadingFloat from "@/components/LoadingFloat.vue";
+import { useAuth } from "@/utils/composables/useAuth";
+import {
+  GlassesOutline,
+  LockClosedOutline,
+  PersonOutline,
+} from "@vicons/ionicons5";
+import { onBeforeMount } from "vue";
+import { WindowSetSize } from "../../wailsjs/runtime";
 
-const { store, loadStoredConfig, attemptNoFeelLogin } = useAuth()
+const { store, loadStoredConfig, attemptNoFeelLogin } = useAuth();
 
 onBeforeMount(async () => {
-  await WindowSetSize(400, 500)
-  await loadStoredConfig()
-  await attemptNoFeelLogin()
-})
+  await WindowSetSize(400, 500);
+  await loadStoredConfig();
+  await attemptNoFeelLogin();
+});
 </script>
 
 <template>
@@ -21,13 +25,13 @@ onBeforeMount(async () => {
     <n-form :model="store.model">
       <n-form-item-row label="用户名">
         <n-input
+          v-model:value="store.model.username"
           type="text"
           :allow-input="store.onlyAllowNumber"
           placeholder="只能输入数字"
-          v-model:value="store.model.username"
-          @keydown.enter.prevent
           clearable
           round
+          @keydown.enter.prevent
         >
           <template #prefix>
             <n-icon :component="PersonOutline" />
@@ -36,12 +40,12 @@ onBeforeMount(async () => {
       </n-form-item-row>
       <n-form-item-row label="密码">
         <n-input
+          v-model:value="store.model.password"
           type="password"
           placeholder="默认为身份证后6位"
-          v-model:value="store.model.password"
           show-password-on="click"
-          @keydown.enter.prevent
           round
+          @keydown.enter.prevent
         >
           <template #prefix>
             <n-icon :component="LockClosedOutline" />
@@ -51,13 +55,36 @@ onBeforeMount(async () => {
           </template>
         </n-input>
       </n-form-item-row>
-      <n-form-item-row label="运营商" class="radio-group-container" size="large">
-        <n-radio-group v-model:value="store.model.client" name="radiobuttongroup1" class="flex-group">
-          <n-radio-button v-for="cm in store.clientModels" :key="cm.value" :value="cm.value" :label="cm.label" class="radio-button" />
+      <n-form-item-row
+        label="运营商"
+        class="radio-group-container"
+        size="large"
+      >
+        <n-radio-group
+          v-model:value="store.model.client"
+          name="radiobuttongroup1"
+          class="flex-group"
+        >
+          <n-radio-button
+            v-for="cm in store.clientModels"
+            :key="cm.value"
+            :value="cm.value"
+            :label="cm.label"
+            class="radio-button"
+          />
         </n-radio-group>
       </n-form-item-row>
     </n-form>
-    <n-button type="primary" round block secondary strong @click="store.handleLogin"> 登录 </n-button>
+    <n-button
+      type="primary"
+      round
+      block
+      secondary
+      strong
+      @click="store.handleLogin"
+    >
+      登录
+    </n-button>
   </n-card>
 </template>
 

@@ -13,26 +13,26 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref } from "vue";
 
 const props = defineProps({
   isOpen: {
     type: Boolean,
     required: true,
   },
-})
+});
 
-const showModalRef = ref(props.isOpen)
+const showModalRef = ref(props.isOpen);
 const clickEvent = {
   onNegativeClick() {
-    window.$message.success('Cancel')
-    showModalRef.value = false
+    window.$message.success("Cancel");
+    showModalRef.value = false;
   },
   onPositiveClick() {
-    window.$message.success('Submit')
-    showModalRef.value = false
+    window.$message.success("Submit");
+    showModalRef.value = false;
   },
-}
+};
 </script>
 
 <style scoped></style>

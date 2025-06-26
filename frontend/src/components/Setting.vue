@@ -9,9 +9,19 @@
           <span>是否开启代理</span>
         </n-space>
 
-        <n-space align="center" v-if="store.isProxyEnabled" style="width: 160px">
-          <n-input v-model:value="store.proxyValue" :disabled="!store.canEditProxy" placeholder="代理地址" />
-          <n-button @click="toggleCanEditProxy">{{ store.canEditProxy ? '锁定' : '修改' }}</n-button>
+        <n-space
+          v-if="store.isProxyEnabled"
+          align="center"
+          style="width: 160px"
+        >
+          <n-input
+            v-model:value="store.proxyValue"
+            :disabled="!store.canEditProxy"
+            placeholder="代理地址"
+          />
+          <n-button @click="toggleCanEditProxy">
+            {{ store.canEditProxy ? "锁定" : "修改" }}
+          </n-button>
         </n-space>
 
         <n-space align="center">
@@ -35,18 +45,33 @@
       <template v-if="store.versions.length === 0">
         <n-empty>
           <template #extra>
-            <n-button type="primary" size="medium" round @click="fetchVersions()" :loading="store.loading"> 获取版本列表 </n-button>
+            <n-button
+              type="primary"
+              size="medium"
+              round
+              :loading="store.loading"
+              @click="fetchVersions()"
+            >
+              获取版本列表
+            </n-button>
           </template>
         </n-empty>
       </template>
       <template v-else>
         <n-modal-provider>
           <n-modal v-model:show="store.modalConf.isOpen" :mask-closable="false">
-            <n-card class="custom-card" :title="`版本更新 ${selectParams.version}`">
+            <n-card
+              class="custom-card"
+              :title="`版本更新 ${selectParams.version}`"
+            >
               <div class="content">
                 <n-card class="update-message">
                   <strong>更新内容: </strong>
-                  <ul v-for="(log, index) of store.versions[selectParams.index].changelog" :key="index">
+                  <ul
+                    v-for="(log, index) of store.versions[selectParams.index]
+                      .changelog"
+                    :key="index"
+                  >
                     <li>{{ log }}</li>
                   </ul>
                 </n-card>
@@ -54,8 +79,13 @@
 
               <div class="actions">
                 <n-space :gap="8">
-                  <n-button type="primary" @click="updateVersion(selectParams.version)">下载</n-button>
-                  <n-button @click="toggleCancel">取消</n-button>
+                  <n-button
+                    type="primary"
+                    @click="updateVersion(selectParams.version)"
+                  >
+                    下载
+                  </n-button>
+                  <n-button @click="toggleCancel"> 取消 </n-button>
                 </n-space>
               </div>
             </n-card>
@@ -63,7 +93,11 @@
         </n-modal-provider>
 
         <n-list>
-          <n-list-item v-for="(versionItem, index) in store.versions" :key="versionItem.version" clickable>
+          <n-list-item
+            v-for="(versionItem, index) in store.versions"
+            :key="versionItem.version"
+            clickable
+          >
             <n-card class="version-card" align="start" hoverable>
               <n-space justify="center">
                 <div>
@@ -71,7 +105,13 @@
                     >版本号：<strong>{{ versionItem.version }}</strong></span
                   ><br />
                 </div>
-                <n-button style="margin-top: 10px" round type="primary" size="small" @click="store.viewVersion(versionItem.version, index)">
+                <n-button
+                  style="margin-top: 10px"
+                  round
+                  type="primary"
+                  size="small"
+                  @click="store.viewVersion(versionItem.version, index)"
+                >
                   获取安装包
                 </n-button>
               </n-space>
@@ -86,15 +126,22 @@
 </template>
 
 <script lang="ts" setup>
-import { useSettings } from '@/utils/composables/useSettings'
-import { onBeforeMount } from 'vue'
-import { WindowSetSize } from '../../wailsjs/runtime'
+import { useSettings } from "@/utils/composables/useSettings";
+import { onBeforeMount } from "vue";
+import { WindowSetSize } from "../../wailsjs/runtime";
 
-const { store, selectParams, fetchVersions, toggleCancel, updateVersion, toggleCanEditProxy } = useSettings()
+const {
+  store,
+  selectParams,
+  fetchVersions,
+  toggleCancel,
+  updateVersion,
+  toggleCanEditProxy,
+} = useSettings();
 
 onBeforeMount(async () => {
-  await WindowSetSize(700, 490)
-})
+  await WindowSetSize(700, 490);
+});
 </script>
 
 <style scoped>
@@ -162,6 +209,8 @@ onBeforeMount(async () => {
   /* background-color: rgba(255, 255, 255, 0.9); */
   box-shadow: 8px rgba(0, 0, 0, 0.08);
   /* background: linear-gradient(200deg, #72afd3, #96fbc4); */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 </style>

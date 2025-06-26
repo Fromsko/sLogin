@@ -1,16 +1,16 @@
 <template>
   <div class="loader">
-    <div class="spinner"></div>
+    <div class="spinner" />
     <div class="text">Loading</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 defineComponent({
-  name: 'LoadingFloat',
-})
+  name: "LoadingFloat",
+});
 </script>
 
 <style scoped>
@@ -25,7 +25,7 @@ defineComponent({
 }
 .loader .spinner::before,
 .loader .spinner::after {
-  content: '';
+  content: "";
   position: absolute;
 }
 /* 图形 */

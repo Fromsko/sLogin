@@ -51,61 +51,59 @@
 </template>
 
 <script setup lang="ts">
-import ActionMenu from '@/components/ActionMenu.vue'
-import SettingModal from '@/components/SettingModal.vue'
-import router from '@/router'
-import { onBeforeMount, onMounted, ref } from 'vue'
-import { WindowSetSize } from '../../wailsjs/runtime/runtime'
+import ActionMenu from "@/components/ActionMenu.vue";
+import { onBeforeMount, onMounted, ref } from "vue";
+import { WindowSetSize } from "../../wailsjs/runtime/runtime";
 
 onBeforeMount(async () => {
-  await WindowSetSize(1080, 750)
-})
+  await WindowSetSize(1080, 750);
+});
 
-const showModal = ref(false)
-const currentTag = ref('文件')
-const leftBoxWidth = ref('185px')
-const items = ref<NodeListOf<Element> | null>(null)
-const currentTagRef = ref<HTMLElement | null>(null)
-const handlerRef = ref<HTMLElement | null>(null)
-const leftBoxRef = ref<HTMLElement | null>(null)
+const showModal = ref(false);
+const currentTag = ref("文件");
+const leftBoxWidth = ref("185px");
+const items = ref<NodeListOf<Element> | null>(null);
+const currentTagRef = ref<HTMLElement | null>(null);
+const handlerRef = ref<HTMLElement | null>(null);
+const leftBoxRef = ref<HTMLElement | null>(null);
 
 function setActive(target: EventTarget | null) {
   if (items.value && currentTagRef.value && target instanceof Element) {
     items.value.forEach((item) => {
-      item.classList.remove('active')
-    })
-    target.classList.add('active')
-    console.log(target.getAttribute('value'), target.textContent)
+      item.classList.remove("active");
+    });
+    target.classList.add("active");
+    console.log(target.getAttribute("value"), target.textContent);
 
-    currentTag.value = target.textContent as string
-    currentTagRef.value.innerText = target.textContent as string
+    currentTag.value = target.textContent as string;
+    currentTagRef.value.innerText = target.textContent as string;
   }
 }
 
 function toggleLeftBox() {
   if (handlerRef.value && leftBoxRef.value) {
-    if (!handlerRef.value.classList.contains('close')) {
-      leftBoxWidth.value = '0'
-      handlerRef.value.classList.add('close')
+    if (!handlerRef.value.classList.contains("close")) {
+      leftBoxWidth.value = "0";
+      handlerRef.value.classList.add("close");
     } else {
-      leftBoxWidth.value = '185px'
-      handlerRef.value.classList.remove('close')
+      leftBoxWidth.value = "185px";
+      handlerRef.value.classList.remove("close");
     }
-    leftBoxRef.value.style.width = leftBoxWidth.value
+    leftBoxRef.value.style.width = leftBoxWidth.value;
   }
 }
 
 const openSettingModal = () => {
-  showModal.value = true
-  console.log(showModal.value)
-}
+  showModal.value = true;
+  console.log(showModal.value);
+};
 
 onMounted(() => {
-  items.value = document.querySelectorAll('.item')
-  currentTagRef.value = document.querySelector('.current-tag')
-  handlerRef.value = document.querySelector('.handler')
-  leftBoxRef.value = document.querySelector('.left-box')
-})
+  items.value = document.querySelectorAll(".item");
+  currentTagRef.value = document.querySelector(".current-tag");
+  handlerRef.value = document.querySelector(".handler");
+  leftBoxRef.value = document.querySelector(".left-box");
+});
 </script>
 
 <style scoped>
@@ -258,7 +256,7 @@ onMounted(() => {
 }
 .right-box .handler::before,
 .right-box .handler::after {
-  content: '';
+  content: "";
   background-color: rgba(41, 194, 214, 0.5);
   position: absolute;
   left: 0;

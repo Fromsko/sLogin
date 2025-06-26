@@ -1,31 +1,39 @@
 {
+  // -------------------- TypeScript 编译选项 --------------------
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ESNext", // 目标 JS 版本
     "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "ESNext", // 使用 ESNext 模块系统
     "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true,
-    "baseUrl": ".",
+    "strict": true, // 启用所有严格类型检查
+    "jsx": "preserve", // 保留 JSX 供 Vue/TSX 使用
+    "sourceMap": true, // 生成 source map
+    "resolveJsonModule": true, // 允许导入 JSON 文件
+    "isolatedModules": true, // 每个文件作为单独模块
+    "esModuleInterop": true, // 兼容 CommonJS
+    "lib": ["ESNext", "DOM"], // 包含的库
+    "skipLibCheck": true, // 跳过库文件类型检查
+    "baseUrl": ".", // 基础路径
+    // -------------------- 路径别名 --------------------
     "paths": {
       "@/*": ["./src/*"],
-      "api/*": ["./src/api/*"],
-      "views/*": ["./src/views/*"],
-      "components/*": ["./src/components/*"]
+      "@api/*": ["./src/api/*"],
+      "@models/*": ["./src/models/*"],
+      "@views/*": ["./src/views/*"],
+      "@components/*": ["./src/components/*"],
+      "@wails/*": ["./wailsjs/*"]
     },
-    "allowJs": true
+    "allowJs": true, // 允许 JS 文件
+    "forceConsistentCasingInFileNames": true // 文件名强制大小写一致
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
+  // -------------------- 包含的文件类型 --------------------
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/types/**/*.d.ts" // 包含 types 目录下的声明文件
   ],
+  // -------------------- 全局类型声明 --------------------
   "types": ["naive-ui/volar", "vue", "vite/client"]
 }

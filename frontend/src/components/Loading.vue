@@ -8,21 +8,21 @@
 
 <template>
   <div class="loader">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+    <div />
+    <div />
+    <div />
+    <div />
   </div>
   <ActionMenu />
 </template>
 
 <script lang="ts" setup>
-import { defineComponent } from 'vue'
-import ActionMenu from './ActionMenu.vue'
+import { defineComponent } from "vue";
+import ActionMenu from "./ActionMenu.vue";
 
 defineComponent({
-  name: 'Loading',
-})
+  name: "Loading",
+});
 </script>
 
 <style scoped>

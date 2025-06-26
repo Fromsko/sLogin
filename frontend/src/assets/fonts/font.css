@@ -1,18 +1,20 @@
 @font-face {
-  font-family: 'myfont';
-  src:  url('font.eot?ajii88');
-  src:  url('font.eot?ajii88#iefix') format('embedded-opentype'),
-    url('font.ttf?ajii88') format('truetype'),
-    url('font.woff?ajii88') format('woff'),
-    url('font.svg?ajii88#font') format('svg');
+  font-family: "myfont";
+  src: url("font.eot?ajii88");
+  src:
+    url("font.eot?ajii88#iefix") format("embedded-opentype"),
+    url("font.ttf?ajii88") format("truetype"),
+    url("font.woff?ajii88") format("woff"),
+    url("font.svg?ajii88#font") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'myfont' !important;
+  font-family: "myfont" !important;
   speak: never;
   font-style: normal;
   font-weight: normal;

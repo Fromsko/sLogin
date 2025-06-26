@@ -1,17 +1,17 @@
 <template>
-  <div class="menu-box" ref="menuBox">
+  <div ref="menuBox" class="menu-box">
     <!-- 图标按钮 -->
-    <div class="menu-button" ref="menuButton">
+    <div ref="menuButton" class="menu-button">
       <div class="line-box">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
+        <div class="line" />
+        <div class="line" />
+        <div class="line" />
       </div>
     </div>
     <!-- 菜单列表 -->
     <ul class="menu-list">
       <li v-for="item in menuItems" :key="item.class">
-        <i :class="item.class"></i>
+        <i :class="item.class" />
         <span @click="item.callback">{{ item.name }}</span>
       </li>
     </ul>
@@ -19,43 +19,43 @@
 </template>
 
 <script lang="ts" setup>
-import handleClipboard from '@/utils/clipboard'
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import handleClipboard from "@/utils/clipboard";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const route = useRoute()
-const router = useRouter()
-const menuBox = ref<HTMLElement | null>(null)
-const menuButton = ref<HTMLElement | null>(null)
+const route = useRoute();
+const router = useRouter();
+const menuBox = ref<HTMLElement | null>(null);
+const menuButton = ref<HTMLElement | null>(null);
 
 const menuItems = ref([
   {
-    class: 'fa fa-sliders',
-    name: '重试',
-    callback: () => router.push('/login'),
+    class: "fa fa-sliders",
+    name: "重试",
+    callback: () => router.push("/login"),
   },
   {
-    class: 'fa fa-clone',
-    name: '项目',
-    callback: () => handleClipboard('https://github.com/fromsko/sLogin'),
+    class: "fa fa-clone",
+    name: "项目",
+    callback: () => handleClipboard("https://github.com/fromsko/sLogin"),
   },
-])
+]);
 
 onMounted(() => {
-  const box = menuBox.value
-  const button = menuButton.value
+  const box = menuBox.value;
+  const button = menuButton.value;
 
   if (box && button) {
-    button.addEventListener('click', () => {
-      box.classList.toggle('active')
-    })
+    button.addEventListener("click", () => {
+      box.classList.toggle("active");
+    });
   }
-})
+});
 </script>
 
 <style scoped>
 body::before {
-  content: '点击右下角';
+  content: "点击右下角";
   color: #fff;
   font-size: 32px;
   text-shadow: 0 3px 3px #4c6ed3;
@@ -162,7 +162,7 @@ body::before {
 }
 /* 菜单项下边框 */
 .menu-list li::before {
-  content: '';
+  content: "";
   width: calc(100% - 24px);
   height: 1px;
   background-color: rgba(92, 103, 255, 0.1);

@@ -1,43 +1,44 @@
 // vite.config.ts
-import vue from '@vitejs/plugin-vue';
-import { fileURLToPath, URL } from "node:url";
-import AutoImport from 'unplugin-auto-import/vite';
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
-import Components from 'unplugin-vue-components/vite';
-import { defineConfig } from 'vite';
+// -------------------- Vue 相关插件 --------------------
+import vue from "@vitejs/plugin-vue"
+import AutoImport from "unplugin-auto-import/vite"
+import { NaiveUiResolver } from "unplugin-vue-components/resolvers"
+import Components from "unplugin-vue-components/vite"
+import vueJsx from "@vitejs/plugin-vue-jsx"
+
+// -------------------- Vite 核心与工具插件 --------------------
+import { defineConfig } from "vite"
+import viteTsconfigPaths from "vite-tsconfig-paths"
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    AutoImport({
-      imports: [
-        'vue',
-        {
-          'naive-ui': [
-            'useDialog',
-            'useMessage',
-            'useNotification',
-            'useLoadingBar'
-          ]
-        }
-      ]
-    }),
+    // --- Vue 相关 ---
+    vue(), // Vue 单文件组件支持
+    vueJsx(), // Vue JSX 支持
     Components({
-      resolvers: [NaiveUiResolver()]
-    })
+      dts: "./src/types/components.d.ts", // 组件自动导入类型声明输出目录
+      resolvers: [NaiveUiResolver()],
+    }),
+    AutoImport({
+      dts: "./src/types/auto-imports.d.ts", // 自动导入类型声明输出目录
+      imports: [
+        "vue",
+        {
+          "naive-ui": [
+            "useDialog",
+            "useMessage",
+            "useNotification",
+            "useLoadingBar",
+          ],
+        },
+      ],
+    }),
+    // --- Vite 工具 ---
+    viteTsconfigPaths(), // 自动识别 tsconfig 路径别名
   ],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "api": fileURLToPath(new URL("./src/api", import.meta.url)),
-      "views": fileURLToPath(new URL("./src/views", import.meta.url)),
-      "components": fileURLToPath(new URL("./src/components", import.meta.url)),
-    },
-  },
   define: {
-    // enable hydration mismatch details in production build
-    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true'
-  }
-
+    // 生产环境下启用 hydration mismatch 详细信息
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "true",
+  },
 })
