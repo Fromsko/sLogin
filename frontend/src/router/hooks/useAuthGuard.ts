@@ -11,7 +11,7 @@ export function useAuthGuard(
   const log = useColorLogOutPut()
   const authStore = useAuthStore()
   const urlPath = to.path.toLowerCase()
-  const isLogin = authStore.isLogin // 你可以根据实际 store 字段调整
+  const isLogin = authStore.isLogin
 
   switch (urlPath) {
     case "/login":
