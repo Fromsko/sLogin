@@ -25,17 +25,20 @@ export const useAuthStore = defineStore("auth", () => {
   const onlyAllowNumber = (value: string) => /^\d*$/.test(value)
 
   const handleLogin = async () => {
-    const resp = await client.login(model.value)
-    if (resp.code === 200) {
-      isLogin.value = true
-      delayDirect("/home")
-      window.$message.success(resp.msg)
-      storage.setItem("loginResp", resp.data)
-      storage.setItem("loginConfig", toRaw(model.value))
-    } else {
-      isLogin.value = false
-      window.$message.error(resp.msg)
-    }
+    isLogin.value = true
+    delayDirect("/home")
+    // 登录逻辑
+    // const resp = await client.login(model.value)
+    // if (resp.code === 200) {
+    //   isLogin.value = true
+    //   delayDirect("/home")
+    //   window.$message.success(resp.msg)
+    //   storage.setItem("loginResp", resp.data)
+    //   storage.setItem("loginConfig", toRaw(model.value))
+    // } else {
+    //   isLogin.value = false
+    //   window.$message.error(resp.msg)
+    // }
   }
 
   const attemptNoFeelLogin = async (

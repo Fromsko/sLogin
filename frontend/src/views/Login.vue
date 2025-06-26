@@ -6,13 +6,13 @@ import {
   LockClosedOutline,
   PersonOutline,
 } from "@vicons/ionicons5";
+import { WindowSetSize } from "@wails/runtime";
 import { onBeforeMount } from "vue";
-import { WindowSetSize } from "../../wailsjs/runtime";
 
 const { store, loadStoredConfig, attemptNoFeelLogin } = useAuth();
 
 onBeforeMount(async () => {
-  await WindowSetSize(400, 500);
+  WindowSetSize(400, 500);
   await loadStoredConfig();
   await attemptNoFeelLogin();
 });
@@ -20,8 +20,7 @@ onBeforeMount(async () => {
 
 <template>
   <LoadingFloat v-if="store.isAlive" />
-
-  <n-card v-else="store.isAlive" class="Form-Container">
+  <n-card v-else class="Form-Container">
     <n-form :model="store.model">
       <n-form-item-row label="用户名">
         <n-input
