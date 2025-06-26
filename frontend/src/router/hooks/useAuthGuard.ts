@@ -6,7 +6,7 @@ import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router"
 export function useAuthGuard(
   to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   const log = useColorLogOutPut()
   const authStore = useAuthStore()

@@ -8,11 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActionMenu: typeof import('./../components/ActionMenu.vue')['default']
-    AlbumPanel: typeof import('./../components/home/content/AlbumPanel.vue')['default']
     Content: typeof import('./../components/Content.vue')['default']
-    ContentArea: typeof import('./../components/home/ContentArea.vue')['default']
-    FavoritePanel: typeof import('./../components/home/content/FavoritePanel.vue')['default']
-    FilePanel: typeof import('./../components/home/content/FilePanel.vue')['default']
     FloatButton: typeof import('./../components/FloatButton.vue')['default']
     Loading: typeof import('./../components/Loading.vue')['default']
     LoadingFloat: typeof import('./../components/LoadingFloat.vue')['default']
@@ -26,15 +22,9 @@ declare module 'vue' {
     NRadioButton: typeof import('naive-ui')['NRadioButton']
     NRadioGroup: typeof import('naive-ui')['NRadioGroup']
     NResult: typeof import('naive-ui')['NResult']
-    RightPanel: typeof import('./../components/home/RightPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Setting: typeof import('./../components/Setting.vue')['default']
     SettingModal: typeof import('./../components/SettingModal.vue')['default']
-    SidebarMenu: typeof import('./../components/home/SidebarMenu.vue')['default']
-    SubscribePanel: typeof import('./../components/home/content/SubscribePanel.vue')['default']
-    TransferPanel: typeof import('./../components/home/content/TransferPanel.vue')['default']
-    TrashPanel: typeof import('./../components/home/content/TrashPanel.vue')['default']
-    VaultPanel: typeof import('./../components/home/content/VaultPanel.vue')['default']
   }
 }
